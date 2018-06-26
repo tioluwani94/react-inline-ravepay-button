@@ -4,12 +4,21 @@ import ReactDOM from "react-dom";
 import "./styles.css";
 class RavepayButton extends React.Component {
   onClick = () => {
+    const {
+      email,
+      apiKey,
+      amount,
+      phoneNumber,
+      currency = "NGN",
+      successCallback,
+      failureCallback
+    } = this.props;
     var x = getpaidSetup({
-      PBFPubKey: "",
-      customer_email: "user@example.com",
-      amount: 2000,
-      customer_phone: "234099940409",
-      currency: "NGN",
+      PBFPubKey: apiKey,
+      customer_email: email,
+      amount: amount,
+      customer_phone: phoneNumber,
+      currency: currency,
       payment_method: "both",
       txref: "rave-123456",
       onclose: function() {},
@@ -20,9 +29,9 @@ class RavepayButton extends React.Component {
           response.tx.chargeResponseCode == "00" ||
           response.tx.chargeResponseCode == "0"
         ) {
-          // redirect to a success page
+          successCallback();
         } else {
-          // redirect to a failure page.
+          failureCallback();
         }
 
         x.close(); // use this to close the modal immediately after payment.
