@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 
 import './styles.css';
 class RavepayButton extends React.Component {
+  state = {
+    loaded: true,
+  };
   static defaultProps = {
     email: '',
     apiKey: '',
@@ -77,6 +80,9 @@ class RavepayButton extends React.Component {
       ravepay.src =
         'https://api.ravepay.co/flwv3-pug/getpaidx/api/flwpbf-inline.js';
       document.body.appendChild(ravepay);
+      this.setState({
+        loaded: false,
+      });
     }
   }
   componentDidMount() {
@@ -85,7 +91,8 @@ class RavepayButton extends React.Component {
     }
   }
   render() {
-    return this.props.render(this.onClick);
+    const { loaded } = this.state;
+    return this.props.render(this.onClick, loaded);
   }
 }
 
@@ -96,9 +103,11 @@ function App() {
       <h2>Start editing to see some magic happen!</h2>
 
       <RavepayButton
-        render={onClick => <button onClick={onClick}>Pay</button>}
-        apiKey="FLWPUBK-faa8d835dfadbaaf5d8c397c29f5b38c-X"
-        email="test.tioluwani@gmail.com"
+        render={(onClick, loaded) => (
+          <button onClick={onClick} disabled={loaded}>
+            Pay
+          </button>
+        )}
       />
     </div>
   );
